@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
+using Firebase;
+using Firebase.Auth;
+using Firebase.Unity.Editor;
+using Firebase.Extensions;
+using Firebase.Database;
 public class Cena : MonoBehaviour
 {
 
@@ -10,6 +16,7 @@ public class Cena : MonoBehaviour
     public GameObject filhoCl;
     public GameObject Quad;
     public TextMeshPro text;
+    public Text TextPergunta;
     public GameObject ObjectNaOH;
     public GameObject ObjectHCL;
 
@@ -38,11 +45,14 @@ public class Cena : MonoBehaviour
     public GameObject ButtonPergunta;
     public GameObject ButtonVoltar;
 
+    public FirebaseDatabase perguntas;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://quimica-5ae65.firebaseio.com/");
+        DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
         filhoNa.SetActive(false);
         filhoCl.SetActive(false);
         SphereNa2.SetActive(false);
@@ -60,6 +70,7 @@ public class Cena : MonoBehaviour
 
         panel.SetActive(false);
         ButtonVoltar.SetActive(false);
+        TextPergunta.text = "";
 
 
         //Plane.SetActive(true);
@@ -243,6 +254,26 @@ public class Cena : MonoBehaviour
         ButtonPergunta.SetActive(false);
         ButtonVoltar.SetActive(true);
         panel.SetActive(true);
+        int num = Random.Range(1,4);
+        Debug.Log(num);
+        DataSnapshot snapshot = null;
+        FirebaseDatabase.DefaultInstance
+          .GetReference("perguntas").Child(num.ToString()).Child("Descricao").Child("")
+          .GetValueAsync().ContinueWith(task => {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                  Debug.Log("Antes do texto");
+                  TextPergunta.text = task.Result.Value.ToString();
+                  Debug.Log(snapshot);
+                // Do something with snapshot...
+            }
+        });
+       //TextPergunta.text = snapshot.Value.ToString();
+       // Debug.Log(snapshot.Value.ToString());
     }
     public void BotaoFechar()
     {
