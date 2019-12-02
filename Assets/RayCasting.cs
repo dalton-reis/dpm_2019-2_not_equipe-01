@@ -56,6 +56,16 @@ public class RayCasting : MonoBehaviour
                     _selection = selection;
                 }
 
+            }else if (GameObject.Find("ImageTargetN").CompareTag("Na"))
+            {
+
+            }else if (GameObject.Find("ImageTargetOH").CompareTag("OH"))
+            {
+
+            }
+            else if (GameObject.Find("ImageTargetH").CompareTag("H"))
+            {
+
             }
         }
     }
