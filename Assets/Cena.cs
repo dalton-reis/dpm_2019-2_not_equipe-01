@@ -17,6 +17,7 @@ public class Cena : MonoBehaviour
     public GameObject Quad;
     public TextMeshPro text;
     public Text TextPergunta;
+    public Text TextRespostas;
     public GameObject ObjectNaOH;
     public GameObject ObjectHCL;
 
@@ -44,6 +45,7 @@ public class Cena : MonoBehaviour
     //Botões
     public GameObject ButtonPergunta;
     public GameObject ButtonVoltar;
+    public GameObject ButtonRespostas;
 
     public FirebaseDatabase perguntas;
 
@@ -70,7 +72,9 @@ public class Cena : MonoBehaviour
 
         panel.SetActive(false);
         ButtonVoltar.SetActive(false);
+        ButtonRespostas.SetActive(false);
         TextPergunta.text = "";
+        TextRespostas.text = "";
 
 
         //Plane.SetActive(true);
@@ -114,6 +118,8 @@ public class Cena : MonoBehaviour
             else if (GameObject.Find("ImageTargetH") == false)
             {
                 Debug.Log("HCL");
+                other.gameObject.SetActive(false);
+                SphereCl2.SetActive(true);
 
             }
         }
@@ -168,7 +174,7 @@ public class Cena : MonoBehaviour
         else if (other.gameObject.CompareTag("H"))
         {
             Debug.Log("H");
-            if (GameObject.Find("ImageTargetCl") == false)
+            if (GameObject.Find("ImageTargetCL") == false)
             {
                 Debug.Log("NaOH");
                 other.gameObject.SetActive(false);
@@ -272,9 +278,29 @@ public class Cena : MonoBehaviour
                 // Do something with snapshot...
             }
         });
-       //TextPergunta.text = snapshot.Value.ToString();
-       // Debug.Log(snapshot.Value.ToString());
+        
+        //TextPergunta.text = snapshot.Value.ToString();
+        // Debug.Log(snapshot.Value.ToString());
+        Debug.Log("Respostas");
+        FirebaseDatabase.DefaultInstance
+          .GetReference("respostas").Child("1").Child("Descricao").Child("")
+          .GetValueAsync().ContinueWith(task => {
+              if (task.IsFaulted)
+              {
+
+              }
+              else if (task.IsCompleted)
+              {
+                  Debug.Log("Respostas");
+                  snapshot = task.Result;
+                  Debug.Log(task.Result.Value.ToString());
+
+              }
+          });
+        TextRespostas.text = snapshot.Value.ToString();
+
     }
+ 
     public void BotaoFechar()
     {
         ButtonPergunta.SetActive(true);
